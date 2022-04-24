@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <string>
 #include <math.h>
@@ -38,12 +39,45 @@ enum direction
 // di chuyen con ran theo 1 huong xac dinh
 void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Rect &point, int &snakeBodyLength, int direction);
 
+void renderImage(string path);
+
 void playGame();
 
 int main(int argc, char *args[])
 {
 	gWindow = SDL_CreateWindow("Snake", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+
+	bool quit = false;
+
+	// Event handler
+	SDL_Event e;
+	// While application is running
+	while (!quit)
+	{
+		// Handle events on queue
+		while (SDL_PollEvent(&e) != 0)
+		{
+
+			// User requests quit
+			if (e.type == SDL_QUIT)
+			{
+				quit = true;
+				break;
+			}
+
+			// User presses a key
+			else if (e.type == SDL_KEYDOWN)
+			{
+				playGame();
+			}
+			else if (e.type == SDL_MOUSEBUTTONDOWN)
+			{
+				playGame();
+			}
+		}
+	}
+
 	return 0;
 }
 
@@ -78,7 +112,6 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(gRenderer);
 
-//do day cua tuong
 	for (int i = 0; i < 3600; i++)
 	{
 		wall[i].w = 10;
@@ -113,7 +146,7 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 	}
 	if (snakeHead.x == point.x && snakeHead.y == point.y)
 	{
-		// chuyen point ra cho khac
+		// chuyển point ra chỗ khác
 		point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
 		point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
 		bool pointOnWall = false;
@@ -152,7 +185,17 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 	SDL_RenderFillRect(gRenderer, &point);
 
 	SDL_RenderPresent(gRenderer);
-	SDL_Delay(100);
+	SDL_Delay(50);
+}
+
+void renderImage(string path)
+{
+	SDL_Surface *loadedSurface = IMG_Load(path.c_str());
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
+	SDL_RenderCopy(gRenderer, texture, NULL, NULL);
+	SDL_RenderPresent(gRenderer);
+	SDL_FreeSurface(loadedSurface);
+	SDL_DestroyTexture(texture);
 }
 
 void playGame()
@@ -279,7 +322,7 @@ void playGame()
 				bool quit2 = false;
 				while (!quit2)
 				{
-					
+					renderImage("image/GameOver.png");
 					if (SDL_WaitEvent(&event))
 					{
 						if (event.type == SDL_QUIT)
@@ -369,11 +412,10 @@ void playGame()
 				// neu an duoc diem
 				if (snakeHead.x == point.x && snakeHead.y == point.y)
 				{
-					
 					// chuyển point ra chỗ khác
 					point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
 					point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
-					// neu diem o tren tuong
+					// xu li diem o tren tuong
 					bool pointOnWall = false;
 					for (int j = 0; j < total_wall; j++)
 					{
