@@ -41,6 +41,8 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 
 void renderImage(string path);
 
+void loadSound(string path);
+
 void playGame();
 
 int main(int argc, char *args[])
@@ -48,10 +50,13 @@ int main(int argc, char *args[])
 	gWindow = SDL_CreateWindow("Snake", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 
+	renderImage("image/StartMenu2.png");
+
 	bool quit = false;
 
 	// Event handler
 	SDL_Event e;
+	int a = 2;
 	// While application is running
 	while (!quit)
 	{
@@ -69,11 +74,57 @@ int main(int argc, char *args[])
 			// User presses a key
 			else if (e.type == SDL_KEYDOWN)
 			{
-				playGame();
+				if (e.key.keysym.sym == SDLK_DOWN)
+				{
+					renderImage("image/StartMenu3.png");
+					a = 3;
+				}
+				if (e.key.keysym.sym == SDLK_UP)
+				{
+					renderImage("image/StartMenu2.png");
+					a = 2;
+				}
+				if (e.key.keysym.sym == SDLK_RETURN && a == 2)
+				{
+					loadSound("sound/StartGameSound.wav");
+					playGame();
+					quit = true;
+				}
+				if (e.key.keysym.sym == SDLK_RETURN && a == 3)
+				{
+					quit = true;
+					break;
+				}
+			}
+			else if (e.type == SDL_MOUSEMOTION)
+			{
+				if (e.button.x < 500 && e.button.x > 90 && e.button.y > 300 && e.button.y < 330)
+				{
+					renderImage("image/StartMenu2.png");
+					a = 2;
+				}
+				if (e.button.x < 430 && e.button.x > 160 && e.button.y > 355 && e.button.y < 382)
+				{
+					renderImage("image/StartMenu3.png");
+					a = 3;
+				}
 			}
 			else if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
-				playGame();
+				if (e.button.button == SDL_BUTTON_LEFT)
+				{
+					if (a == 2)
+					{
+						loadSound("sound/StartGameSound.wav");
+						playGame();
+						quit = true;
+					}
+					if (a == 3)
+					{
+						quit = true;
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -146,10 +197,12 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 	}
 	if (snakeHead.x == point.x && snakeHead.y == point.y)
 	{
+		loadSound("sound/Move.wav");
 		// chuyển point ra chỗ khác
 		point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
 		point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
 		bool pointOnWall = false;
+		//xu li diem o tren tuong
 		for (int j = 0; j < total_wall; j++)
 		{
 			if (point.x == wall[j].x && point.y == wall[j].y)
@@ -412,6 +465,7 @@ void playGame()
 				// neu an duoc diem
 				if (snakeHead.x == point.x && snakeHead.y == point.y)
 				{
+					loadSound("sound/Move.wav");
 					// chuyển point ra chỗ khác
 					point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
 					point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
@@ -454,4 +508,12 @@ void playGame()
 			}
 		}
 	}
+}
+
+void loadSound(string path)
+{
+	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
+	Mix_Chunk *sound = Mix_LoadWAV(path.c_str());
+	Mix_PlayChannel(-1, sound, 0);
+
 }
