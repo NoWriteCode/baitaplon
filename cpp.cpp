@@ -1,11 +1,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include <math.h>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 using namespace std;
 
 // Screen dimension constants
@@ -24,7 +26,8 @@ SDL_Surface *gScreenSurface = NULL;
 
 int step = 10;
 int snakeBodyLength = 3;
-int total_wall = 120;
+int total_wall = 220;
+int score = 0;
 
 enum direction
 {
@@ -45,12 +48,26 @@ void loadSound(string path);
 
 void playGame();
 
-int main(int argc, char *args[])
+void loadText(const string &path, int font_size, const string &text, const SDL_Color color, int x, int y, int w, int h)
+{
+	TTF_Font *font = TTF_OpenFont(path.c_str(), font_size);
+	auto textSurface = TTF_RenderText_Solid(font, text.c_str(), color);
+	auto textTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+	SDL_Rect rect = {x, y, w, h};
+	SDL_RenderCopy(gRenderer, textTexture, NULL, &rect);
+	SDL_FreeSurface(textSurface);
+	SDL_RenderPresent(gRenderer);
+	SDL_DestroyTexture(textTexture);
+}
+
+int main(int argc, char *argv[])
 {
 	gWindow = SDL_CreateWindow("Snake", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 
 	renderImage("image/StartMenu2.png");
+	// SDL_Color textColor =
+	TTF_Init();
 
 	bool quit = false;
 
@@ -168,21 +185,48 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 		wall[i].w = 10;
 		wall[i].h = 10;
 	}
-	for (int i = 0; i < total_wall; i++)
+	for (int i = 0; i < 60; i++)
 	{
-		if (i < total_wall / 2)
-		{
-			wall[i].x = 0;
-			wall[i].y = i * 10;
-		}
-		else
-		{
-			wall[i].x = SCREEN_WIDTH - 10;
-			wall[i].y = (i - SCREEN_WIDTH / 10) * 10;
-		}
+		wall[i].y = 0;
+		wall[i].x = i * 10;
 	}
-	SDL_SetRenderDrawColor(gRenderer, 255, 255, 0, 255);
-	for (int i = 0; i < 120; i++)
+	for (int i = 60; i < 120; i++)
+	{
+		wall[i].y = 480;
+		wall[i].x = (i - 60) * 10;
+	}
+	for (int i = 1; i <= 15; i++)
+	{
+		wall[i + 119].x = 0;
+		wall[i + 119].y = i * 10;
+	}
+	for (int i = 34; i <= 48; i++)
+	{
+		wall[i + 101].x = 0;
+		wall[i + 101].y = i * 10;
+	}
+	for (int i = 1; i <= 15; i++)
+	{
+		wall[i + 150].x = 590;
+		wall[i + 150].y = i * 10;
+	}
+	for (int i = 34; i <= 48; i++)
+	{
+		wall[i + 132].x = 590;
+		wall[i + 132].y = i * 10;
+	}
+	for (int i = 20; i < 39; i++)
+	{
+		wall[i + 161].x = i * 10;
+		wall[i + 161].y = 200;
+	}
+	for (int i = 20; i < 39; i++)
+	{
+		wall[i + 180].x = i * 10;
+		wall[i + 180].y = 280;
+	}
+	SDL_SetRenderDrawColor(gRenderer, 169, 169, 169, 255);
+	for (int i = 0; i < total_wall; i++)
 	{
 		SDL_RenderFillRect(gRenderer, &wall[i]);
 	}
@@ -197,12 +241,12 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 	}
 	if (snakeHead.x == point.x && snakeHead.y == point.y)
 	{
+		score = score + 10;
 		loadSound("sound/Move.wav");
 		// chuyển point ra chỗ khác
 		point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-		point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
+		point.y = (rand() % 48) * 10;
 		bool pointOnWall = false;
-		//xu li diem o tren tuong
 		for (int j = 0; j < total_wall; j++)
 		{
 			if (point.x == wall[j].x && point.y == wall[j].y)
@@ -215,7 +259,7 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 		{
 			bool check3 = true;
 			point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-			point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
+			point.y = (rand() % 48) * 10;
 			for (int j = 0; j < total_wall; j++)
 			{
 				if (point.x == wall[j].x && point.y == wall[j].y)
@@ -236,9 +280,13 @@ void snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Re
 	// vẽ lại cái để ăn
 	SDL_SetRenderDrawColor(gRenderer, 255, 51, 0, 0xFF);
 	SDL_RenderFillRect(gRenderer, &point);
-
+	string s;
+	stringstream ss;
+	ss << score;
+	ss >> s;
+	loadText("font/PressStart2P.ttf", 15, "SCORE:" + s, {100, 100, 100, 255}, 50, 500, 200, 30);
 	SDL_RenderPresent(gRenderer);
-	SDL_Delay(50);
+	SDL_Delay(100);
 }
 
 void renderImage(string path)
@@ -253,7 +301,7 @@ void renderImage(string path)
 
 void playGame()
 {
-
+	score = 0;
 	// tạo phần đầu
 	SDL_Rect snakeHead;
 	snakeHead.x = SCREEN_HEIGHT / 2;
@@ -293,24 +341,52 @@ void playGame()
 		wall[i].w = 10;
 		wall[i].h = 10;
 	}
-	for (int i = 0; i < total_wall; i++)
+	for (int i = 0; i < 60; i++)
 	{
-		if (i < total_wall / 2)
-		{
-			wall[i].x = 0;
-			wall[i].y = i * 10;
-		}
-		else
-		{
-			wall[i].x = SCREEN_WIDTH - 10;
-			wall[i].y = (i - SCREEN_WIDTH / 10) * 10;
-		}
+		wall[i].y = 0;
+		wall[i].x = i * 10;
 	}
-	SDL_SetRenderDrawColor(gRenderer, 255, 255, 0, 255);
-	for (int i = 0; i < 120; i++)
+	for (int i = 60; i < 120; i++)
+	{
+		wall[i].y = 480;
+		wall[i].x = (i - 60) * 10;
+	}
+	for (int i = 1; i <= 15; i++)
+	{
+		wall[i + 119].x = 0;
+		wall[i + 119].y = i * 10;
+	}
+	for (int i = 34; i <= 48; i++)
+	{
+		wall[i + 101].x = 0;
+		wall[i + 101].y = i * 10;
+	}
+	for (int i = 1; i <= 15; i++)
+	{
+		wall[i + 150].x = 590;
+		wall[i + 150].y = i * 10;
+	}
+	for (int i = 34; i <= 48; i++)
+	{
+		wall[i + 132].x = 590;
+		wall[i + 132].y = i * 10;
+	}
+	for (int i = 20; i < 39; i++)
+	{
+		wall[i + 161].x = i * 10;
+		wall[i + 161].y = 200;
+	}
+	for (int i = 20; i < 39; i++)
+	{
+		wall[i + 180].x = i * 10;
+		wall[i + 180].y = 280;
+	}
+	SDL_SetRenderDrawColor(gRenderer, 169, 169, 169, 255);
+	for (int i = 0; i < total_wall; i++)
 	{
 		SDL_RenderFillRect(gRenderer, &wall[i]);
 	}
+
 	SDL_RenderPresent(gRenderer);
 
 	// tạo điểm ngẫu nhiên để ăn
@@ -319,7 +395,7 @@ void playGame()
 	point.h = 10;
 	srand(time(NULL));
 	point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-	point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
+	point.y = (rand() % 48) * 10;
 	bool pointOnWall = false;
 	for (int j = 0; j < total_wall; j++)
 	{
@@ -333,7 +409,7 @@ void playGame()
 	{
 		bool check3 = true;
 		point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-		point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
+		point.y = (rand() % 48) * 10;
 		for (int j = 0; j < total_wall; j++)
 		{
 			if (point.x == wall[j].x && point.y == wall[j].y)
@@ -466,9 +542,10 @@ void playGame()
 				if (snakeHead.x == point.x && snakeHead.y == point.y)
 				{
 					loadSound("sound/Move.wav");
+					score = score + 10;
 					// chuyển point ra chỗ khác
 					point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-					point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
+					point.y = (rand() % 48) * 10;
 					// xu li diem o tren tuong
 					bool pointOnWall = false;
 					for (int j = 0; j < total_wall; j++)
@@ -483,7 +560,7 @@ void playGame()
 					{
 						bool check3 = true;
 						point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-						point.y = (rand() % (SCREEN_WIDTH / 10)) * 10;
+						point.y = (rand() % 48) * 10;
 						for (int j = 0; j < total_wall; j++)
 						{
 							if (point.x == wall[j].x && point.y == wall[j].y)
@@ -515,5 +592,4 @@ void loadSound(string path)
 	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
 	Mix_Chunk *sound = Mix_LoadWAV(path.c_str());
 	Mix_PlayChannel(-1, sound, 0);
-
 }
