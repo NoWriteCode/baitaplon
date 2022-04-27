@@ -50,6 +50,19 @@ void loadSound(string path);
 
 void playGame();
 
+void loadText(const string &font_path, int font_size, const string &text, const SDL_Color color, int x, int y, int w, int h)
+{
+	TTF_Font *font = TTF_OpenFont(font_path.c_str(), font_size);
+	auto textSurface = TTF_RenderText_Solid(font, text.c_str(), color);
+	auto textTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+	TTF_SizeText(font, text.c_str(), &w, &h);
+	SDL_Rect rect = {x, y, w, h};
+	SDL_RenderCopy(gRenderer, textTexture, NULL, &rect);
+	SDL_FreeSurface(textSurface);
+	SDL_RenderPresent(gRenderer);
+	SDL_DestroyTexture(textTexture);
+}
+
 void close()
 {
 	SDL_DestroyTexture(gTexture);
@@ -340,6 +353,7 @@ int snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Rec
 	stringstream ss;
 	ss << score;
 	ss >> s;
+	loadText("font/PressStart2P.ttf", 17, "SCORE:" + s, {100, 100, 100, 255}, 50, 510, 200, 30);
 	SDL_RenderPresent(gRenderer);
 	SDL_Delay(50);
 	return flag;
@@ -561,6 +575,7 @@ void playGame()
 					ss << score;
 					ss >> s;
 					renderImage("image/pause0.png");
+					loadText("font/PressStart2P.ttf", 26, s, {255, 255, 255, 255}, 305, 90, 200, 40);
 					bool quit3 = false;
 					// Event handler
 					SDL_Event e;
@@ -593,11 +608,13 @@ void playGame()
 								{
 									button = 0;
 									renderImage("image/pause0.png");
+									loadText("font/PressStart2P.ttf", 26, s, {255, 255, 255, 255}, 305, 90, 200, 40);
 								}
 								if (e.key.keysym.sym == SDLK_DOWN && button == 0)
 								{
 									button = 1;
 									renderImage("image/pause1.png");
+									loadText("font/PressStart2P.ttf", 26, s, {255, 255, 255, 255}, 305, 90, 200, 40);
 								}
 								if (e.key.keysym.sym == SDLK_RETURN && button == 1)
 								{
@@ -744,6 +761,9 @@ void hscore(SDL_Event e)
 	stringstream ss;
 	ss << highscore;
 	ss >> s;
+	loadText("font/PressStart2P.ttf", 22, "HIGH SCORE: " + s, {255, 255, 255, 255}, 60, 200, 30, 30);
+	loadText("font/PressStart2P.ttf", 22, "(Press any key to exit) ", {255, 255, 255, 255}, 60, 250, 30, 30);
+	loadText("font/PressStart2P.ttf", 22, "       < BACK ", {255, 255, 255, 255}, 60, 500, 30, 30);
 	int flag = 0;
 	bool quit = false;
 	while (!quit)
@@ -790,6 +810,8 @@ void gameover()
 	bool quit2 = false;
 	while (!quit2)
 	{
+
+		//menu cu
 		// renderImage("image/GameOver.png");
 		// if (SDL_WaitEvent(&event))
 		// {
@@ -815,6 +837,7 @@ void gameover()
 		ss << score;
 		ss >> s;
 		renderImage("image/gameover0.png");
+		loadText("font/PressStart2P.ttf", 26, s, {255, 255, 255, 255}, 305, 90, 200, 40);
 		bool quit3 = false;
 		// Event handler
 		SDL_Event e;
@@ -847,11 +870,13 @@ void gameover()
 					{
 						button = 0;
 						renderImage("image/gameover0.png");
+						loadText("font/PressStart2P.ttf", 26, s, {255, 255, 255, 255}, 305, 90, 200, 40);
 					}
 					if (e.key.keysym.sym == SDLK_DOWN && button == 0)
 					{
 						button = 1;
 						renderImage("image/gameover1.png");
+						loadText("font/PressStart2P.ttf", 26, s, {255, 255, 255, 255}, 305, 90, 200, 40);
 					}
 					if (e.key.keysym.sym == SDLK_RETURN && button == 1)
 					{
