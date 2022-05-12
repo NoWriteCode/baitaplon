@@ -1,7 +1,7 @@
 # all:
 # 	g++ -Isrc/Include -Lsrc/lib -o main main.cpp -lmingw32 -lSDL2main -lSDL2
 #OBJS specifies which files to compile as part of the project
-OBJS = main.cpp
+OBJS = source/main.cpp source/gameOver.cpp source/hscore.cpp source/loadSound.cpp source/loadText.cpp source/playGame.cpp source/renderImage.cpp source/snake.cpp source/snakeMoves.cpp source/startMenu.cpp
 
 #CC specifies which compiler we're using
 CC = g++
