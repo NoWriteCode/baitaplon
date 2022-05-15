@@ -1,31 +1,36 @@
-
 #pragma once
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
 #include <string>
 
 class Snake {
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *texture;
-    SDL_Surface *screenSurface;
+    private:
+        SDL_Window *window;
+        SDL_Renderer *renderer;
+        SDL_Texture *texture;
+        SDL_Surface *screenSurface;
 
     public:
         Snake();
         ~Snake();
-        int score;
-        int highscore;
-        enum direction{
+
+        enum direction {
             RIGHT,
             LEFT,
             UP,
             DOWN
         };
-        static const int SCREEN_WIDTH = 600;
+
+        int score;
+        int highscore;
+        
+        static const int SCREEN_WIDTH  = 600;
         static const int SCREEN_HEIGHT = 600;
-        // static int total_wall;
-        static const int step = 10;
+        static const int total_wall    = 220;
+        static const int step          =  10;
         static int snakeBodyLength;
-        SDL_Rect wall[220];
+        SDL_Rect wall[total_wall];
 
         void renderImage(std::string path);
         void loadSound(std::string path);
@@ -35,6 +40,6 @@ class Snake {
         void playGame();
         void drawPoint();
         int snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, SDL_Rect &point, int &snakeBodyLength, int direction);
-        void hscore(SDL_Event e);
+        void highScore(SDL_Event e);
         void gameOver();
 };  

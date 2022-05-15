@@ -1,10 +1,13 @@
 #include "snake.hpp"
 
 void Snake::startMenu(int button) {
+	
+	score = 0;
     char a = button + '0';
 	std::string s;
 	s.push_back(a);
 	renderImage("image/start" + s + ".png");
+
 	enum {
 		START,
 		HIGHSCORES,
@@ -12,7 +15,6 @@ void Snake::startMenu(int button) {
 	};
 
 	bool quit = false;
-
 	// Event handler
 	SDL_Event e;
 	// While application is running
@@ -55,7 +57,7 @@ void Snake::startMenu(int button) {
 				}
 
 				if (e.key.keysym.sym == SDLK_RETURN && button == HIGHSCORES) {
-					hscore(e);
+					highScore(e);
 				}
 
 				if (e.key.keysym.sym == SDLK_RETURN && button == EXIT) {
@@ -91,7 +93,7 @@ void Snake::startMenu(int button) {
 					}
 
 					if (button == HIGHSCORES) {
-						hscore(e);
+						highScore(e);
 					}
 
 					if (button == EXIT) {

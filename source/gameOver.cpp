@@ -3,17 +3,19 @@
 #include <sstream>
 
 void Snake::gameOver() {
+	
     loadSound("sound/end.wav");
 	if (score > highscore)
 	{
 		std::ofstream fout;
 		fout.open("highscore.txt");
 		fout << score;
-		fout.close();
+		fout.close(); 
 	}
 
 	SDL_Event event;
 	bool quit2 = false;
+
 	while (!quit2) {
 		std::string s;
 		std::stringstream ss;
@@ -21,6 +23,7 @@ void Snake::gameOver() {
 		ss >> s;
 		renderImage("image/gameover0.png");
 		loadText("font/PressStart2P.ttf", 26, s, {255, 255, 255, 255}, 305, 90, 200, 40);
+
 		bool quit3 = false;
 		// Event handler
 		SDL_Event e;
@@ -63,6 +66,7 @@ void Snake::gameOver() {
 
 					if (e.key.keysym.sym == SDLK_RETURN && button == 0) {
 						snakeBodyLength = 3;
+						score = 0;
 						playGame();
 					}
 				}
