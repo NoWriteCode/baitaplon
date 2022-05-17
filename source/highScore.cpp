@@ -18,13 +18,12 @@ void Snake::highScore(SDL_Event e) {
 	myfile.close();
 	std::string s;
 	std::stringstream ss;
-	ss << highscore;
+	ss << highscore; 
 	ss >> s;
 	
 	loadText("font/PressStart2P.ttf", 22, "HIGH SCORE: " + s, {255, 255, 255, 255}, 60, 200, 30, 30);
 	loadText("font/PressStart2P.ttf", 22, "(Press any key to exit) ", {255, 255, 255, 255}, 60, 250, 30, 30);
 	loadText("font/PressStart2P.ttf", 22, "       < BACK ", {255, 255, 255, 255}, 60, 500, 30, 30);
-
 	int flag = 0;
 	bool quit = false;
 	while (!quit) {

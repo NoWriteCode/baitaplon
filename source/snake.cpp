@@ -1,17 +1,18 @@
 #include "snake.hpp"
+#include <SDL2/SDL_ttf.h>
 #include <ctime>
 
 Snake::Snake() {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
-	window = SDL_CreateWindow("Snake", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Snake Xenzia", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+	score = 0;
 	highscore = 0;
 }
 
 int Snake::snakeBodyLength = 3;
-
-// int Snake::total_wall = 220;
 
 void Snake::drawPoint() {
     SDL_Rect point;
@@ -23,7 +24,7 @@ void Snake::drawPoint() {
 
 	//xy li diem tren tuong
 	bool pointOnWall = false;
-	for (int j = 0; j < total_wall; j++) {
+	for (int j = 0; j < 260; j++) {
 		if (point.x == wall[j].x && point.y == wall[j].y) {
 			pointOnWall = true;
 			break;
@@ -34,7 +35,7 @@ void Snake::drawPoint() {
 		bool check3 = true;
 		point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
 		point.y = (rand() % 48) * 10;
-		for (int j = 0; j < total_wall; j++) {
+		for (int j = 0; j < 260; j++) {
 			if (point.x == wall[j].x && point.y == wall[j].y) {
 				check3 = false;
 				break;
@@ -45,15 +46,14 @@ void Snake::drawPoint() {
 			pointOnWall = false;
 		}
 	}
-
-	SDL_SetRenderDrawColor(renderer, 0, 255, 255, 0xFF);
+	SDL_SetRenderDrawColor(renderer, 20, 45, 80, 0xFF);
 	SDL_RenderFillRect(renderer, &point);
 	SDL_RenderPresent(renderer);
 }
 
 Snake::~Snake() {
-    SDL_DestroyRenderer(this->renderer);
     SDL_DestroyWindow(this->window);
+	SDL_DestroyRenderer(this->renderer);
     SDL_DestroyTexture(this->texture);
     SDL_Quit();
 }

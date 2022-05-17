@@ -1,7 +1,8 @@
 #include "snake.hpp"
 
 void Snake::startMenu(int button) {
-	
+
+	loadSound("sound/PH.wav");
 	score = 0;
     char a = button + '0';
 	std::string s;
@@ -51,7 +52,7 @@ void Snake::startMenu(int button) {
 				}
 
 				if (e.key.keysym.sym == SDLK_RETURN && button == START) {
-					loadSound("sound/StartGameSound.wav");
+					loadSound("sound/LOL.wav");
 					playGame();
 					quit = true;
 				}

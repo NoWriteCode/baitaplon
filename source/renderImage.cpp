@@ -8,7 +8,7 @@ void Snake::renderImage(std::string path) {
 
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
-	
+	 
 	SDL_FreeSurface(loadedSurface);
 	SDL_DestroyTexture(texture);
 }
