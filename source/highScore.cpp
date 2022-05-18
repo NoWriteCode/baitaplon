@@ -20,6 +20,13 @@ void Snake::highScore(SDL_Event e) {
 	std::stringstream ss;
 	ss << highscore; 
 	ss >> s;
+
+	std::stringstream digit(s);
+	int x = 0; 
+	digit >> x;
+	if (x < 10) {
+		s = '0' + s;
+	}
 	
 	loadText("font/PressStart2P.ttf", 22, "HIGH SCORE: " + s, {255, 255, 255, 255}, 60, 200, 30, 30);
 	loadText("font/PressStart2P.ttf", 22, "(Press any key to exit) ", {255, 255, 255, 255}, 60, 250, 30, 30);

@@ -35,39 +35,7 @@ void Snake::playGame() {
 
 	// tạo điểm ngẫu nhiên để ăn
 	SDL_Rect point;
-	point.w = 10;
-	point.h = 10;
-	srand(time(NULL));
-	point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-	point.y = (rand() % 48) * 10;
-
-	bool pointOnWall = false;
-	for (int j = 0; j < 260; j++) {
-		if (point.x == wall[j].x && point.y == wall[j].y) {
-			pointOnWall = true;
-			break;
-		}
-	}
-
-	while (pointOnWall) {
-		bool check3 = true;
-		point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
-		point.y = (rand() % 48) * 10;
-		for (int j = 0; j < 260; j++) {
-			if (point.x == wall[j].x && point.y == wall[j].y) {
-				check3 = false;
-				break;
-			}
-		}
-
-		if (check3) {
-			pointOnWall = false;
-		}
-	}
-
-	SDL_SetRenderDrawColor(renderer, 162, 229, 123, 0xFF);
-	SDL_RenderFillRect(renderer, &point);
-	SDL_RenderPresent(renderer);
+	drawPoint(point);
 
 	int direction = RIGHT;
 	std::string s;
@@ -152,42 +120,42 @@ void Snake::playGame() {
 				snakeBody[0].y = snakeHead.y;
 
 				if (direction == LEFT) {
-					if (e.key.keysym.sym == SDLK_DOWN) {
+					if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s) {
 						direction = DOWN;
 					}
 
-					if (e.key.keysym.sym == SDLK_UP) {
+					if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w) {
 						direction = UP;
 					}
 				}
 				
 				if (direction == RIGHT) {
 
-					if (e.key.keysym.sym == SDLK_DOWN) {
+					if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s) {
 						direction = DOWN;
 					}
 
-					if (e.key.keysym.sym == SDLK_UP) {
+					if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w) {
 						direction = UP;
 					}
 				}
 
 				if (direction == UP) {
-					if (e.key.keysym.sym == SDLK_LEFT) {
+					if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a) {
 						direction = LEFT;
 					}
 					// Tương tự với dịch phải, xuống và lên
-					if (e.key.keysym.sym == SDLK_RIGHT) {
+					if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d) {
 						direction = RIGHT;
 					}
 				}
 
 				if (direction == DOWN) {
-					if (e.key.keysym.sym == SDLK_LEFT) {
+					if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a) {
 						direction = LEFT;
 					}
 
-					if (e.key.keysym.sym == SDLK_RIGHT) {
+					if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d) {
 						direction = RIGHT;
 					}
 				}

@@ -2,6 +2,7 @@
 
 void Snake::startMenu(int button) {
 
+	//loadSound("sound/Themesong.wav", 0);
 	score = 0;
     char a = button + '0';
 	std::string s;
@@ -51,7 +52,7 @@ void Snake::startMenu(int button) {
 				}
 
 				if (e.key.keysym.sym == SDLK_RETURN && button == START) {
-					loadSound("sound/LOL.wav");
+					loadSound("sound/LOL.wav", 0);
 					playGame();
 					quit = true;
 				}
@@ -87,7 +88,7 @@ void Snake::startMenu(int button) {
 			else if (e.type == SDL_MOUSEBUTTONDOWN) {
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					if (button == START) {
-						loadSound("sound/StartGameSound.wav");
+						loadSound("sound/LOL.wav", 0);
 						playGame();
 						quit = true;
 					}

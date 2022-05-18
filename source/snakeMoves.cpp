@@ -35,7 +35,7 @@ int Snake::snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, 
 
 	//ve map
 	drawMap();
-	
+
 	// ve lai cai dau
 	SDL_SetRenderDrawColor(renderer, 255, 55, 55, 255);
 	SDL_RenderFillRect(renderer, &snakeHead);
@@ -47,7 +47,7 @@ int Snake::snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, 
 
 	int flag = 0;
 
-	for (int i = 0; i < std::max(snakeBodyLength, 260); i++) {
+	for (int i = 0; i < std::max(snakeBodyLength, 261); i++) {
 		if ((snakeHead.x == snakeBody[i].x && snakeHead.y == snakeBody[i].y) || (snakeHead.x == wall[i].x && snakeHead.y == wall[i].y)) {
 			snakeBodyLength = 3;
 			flag = 1;
@@ -57,20 +57,19 @@ int Snake::snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, 
 	//khi an dc point
 	if (snakeHead.x == point.x && snakeHead.y == point.y) {
 		score = score + 1;
-
-		if (score == 1) loadSound("sound/FirstBlood.mp3");
-		else if (score % 5 == 2) loadSound("sound/doubleKill.mp3");
-		else if (score % 5 == 3) loadSound("sound/tripleKill.mp3");
-		else if (score % 5 == 4) loadSound("sound/quataKill.mp3");
-		else if (score % 5 == 0) loadSound("sound/pentaKill.mp3");
-		else loadSound("sound/kill.mp3");
+		if (score == 1) loadSound("sound/FirstBlood.mp3", 0);
+		else if (score % 5 == 2) loadSound("sound/doubleKill.mp3", 0);
+		else if (score % 5 == 3) loadSound("sound/tripleKill.mp3", 0);
+		else if (score % 5 == 4) loadSound("sound/quataKill.mp3", 0);
+		else if (score % 5 == 0) loadSound("sound/pentaKill.mp3", 0);
+		else loadSound("sound/kill.mp3", 0);
 
 		// chuyển point ra chỗ khác
 		point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
 		point.y = (rand() % 48) * 10;
 		
 		bool pointOnWall = false;
-		for (int j = 0; j < 260; j++) {
+		for (int j = 0; j < 261; j++) {
 			if (point.x == wall[j].x && point.y == wall[j].y) {
 				pointOnWall = true;
 				break;
@@ -82,7 +81,7 @@ int Snake::snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, 
 			point.x = (rand() % (SCREEN_HEIGHT / 10)) * 10;
 			point.y = (rand() % 48) * 10;
 
-			for (int j = 0; j < 260; j++) {
+			for (int j = 0; j < 261; j++) {
 				if (point.x == wall[j].x && point.y == wall[j].y) {
 					check3 = false;
 					break;
@@ -106,8 +105,15 @@ int Snake::snakeMoves(SDL_Rect &snakeHead, SDL_Rect *snakeBody, SDL_Rect *wall, 
 	std::stringstream ss;
 	ss << score;
 	ss >> s;
+	std::stringstream digit(s);
+	int x = 0; 
+	digit >> x;
+	
+	if (x < 10) {
+		s = '0' + s;
+	}
 
-	loadText("font/PressStart2P.ttf", 17, "         SCORE:" + s, {255, 255, 255, 255}, 50, 510, 200, 30);
+	loadText("font/PressStart2P.ttf", 40, "  SCORE:" + s, {255, 255, 255, 255}, 50, 530, 200, 30);
 	SDL_RenderPresent(renderer);
 	SDL_Delay(50);
 	return flag;

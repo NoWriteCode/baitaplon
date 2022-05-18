@@ -3,7 +3,7 @@
 
 void Snake::drawMap() {
 
-    for (int i = 0; i < 260; i++) {
+    for (int i = 0; i < 261; i++) {
 		wall[i].w = 10;
 		wall[i].h = 10;
 	}
@@ -45,23 +45,23 @@ void Snake::drawMap() {
 	}	
 
 	for (int i = 44; i < 59; i++) {
-		wall[i + 161].x = i * 10 - 100;
+		wall[i + 161].x = i * 10 - 90;
 		wall[i + 161].y = 200;
 	}
 
 	//giua map duoi
 	for (int i = 20; i < 35; i++) {
-		wall[i + 200].x = i * 10 - 100;
-		wall[i + 200].y = 280;
+		wall[i + 202].x = i * 10 - 100;
+		wall[i + 202].y = 280;
 	}
 
 	for (int i = 44; i < 59; i++) {
-		wall[i + 200].x = i * 10 - 100;
-		wall[i + 200].y = 280;
+		wall[i + 202].x = i * 10 - 90;
+		wall[i + 202].y = 280;
 	}
 
 	SDL_SetRenderDrawColor(renderer, 40, 200, 180, 255);
-	for (int i = 0; i < 260; i++) {
+	for (int i = 0; i < 261; i++) {
 		SDL_RenderFillRect(renderer, &wall[i]);
 	}
 }

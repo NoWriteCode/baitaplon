@@ -4,7 +4,7 @@
 
 void Snake::gameOver() {
 	//
-    loadSound("sound/defeat.wav");
+    loadSound("sound/defeat.wav", 0);
 	if (score > highscore) {
 		std::ofstream fout;
 		fout.open("highscore.txt");
@@ -20,8 +20,16 @@ void Snake::gameOver() {
 		std::stringstream ss;
 		ss << score;
 		ss >> s;
+
+		std::stringstream digit(s);
+		int x = 0; 
+		digit >> x;
+		if (x < 10) {
+			s = '0' + s;
+		}
+
 		renderImage("image/gameover0.png");
-		loadText("font/PressStart2P.ttf", 35, "SCORE:" + s, {255, 255, 255, 255}, 180, 90, 200, 40);
+		loadText("font/PressStart2P.ttf", 35, "SCORE:" + s, {255, 255, 255, 255}, 160, 90, 200, 40);
 
 		bool quit3 = false;
 		// Event handler
@@ -64,7 +72,7 @@ void Snake::gameOver() {
 					}
 
 					if (e.key.keysym.sym == SDLK_RETURN && button == 0) {
-						loadSound("sound/LOL.wav");
+						loadSound("sound/LOL.wav", 0);
 						score = 0;
 						playGame();
 					}
