@@ -2,7 +2,6 @@
 
 void Snake::startMenu(int button) {
 
-	loadSound("sound/PH.wav");
 	score = 0;
     char a = button + '0';
 	std::string s;

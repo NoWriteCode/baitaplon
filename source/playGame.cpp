@@ -5,7 +5,6 @@
 #include <fstream>
 
 void Snake::playGame() {
-
 	// tạo phần đầu
 	SDL_Rect snakeHead;
 	snakeHead.x = SCREEN_HEIGHT / 2;

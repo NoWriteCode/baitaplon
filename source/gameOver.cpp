@@ -3,7 +3,7 @@
 #include <sstream>
 
 void Snake::gameOver() {
-	
+	//
     loadSound("sound/defeat.wav");
 	if (score > highscore) {
 		std::ofstream fout;

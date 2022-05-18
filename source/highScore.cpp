@@ -4,7 +4,7 @@
 #include <sstream>
 
 void Snake::highScore(SDL_Event e) {
-	
+	//
 	renderImage("highscore1.png");
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
@@ -27,7 +27,7 @@ void Snake::highScore(SDL_Event e) {
 	int flag = 0;
 	bool quit = false;
 	while (!quit) {
-
+		
 		while (SDL_PollEvent(&e) != 0) {
 			// User requests quit
 			if (e.type == SDL_QUIT)	{
